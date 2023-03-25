@@ -1,0 +1,31 @@
+!This is the initial paste in config. Will later be dynamic generated in CV
+!DynConfig:base_wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}_{{mgt_ip}}
+!
+hostname wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}
+!
+lldp management-address Vlan{{mgt_vlan}}
+!
+no vlan 1
+!
+vlan {{mgt_vlan}}
+   name ACCESS-SWITCH-MANAGEMENT-VLAN
+!
+interface Vlan{{mgt_vlan}}
+   description ACCESS-SWITCH-MANAGEMENT-VLAN
+   ip address {{mgt_ip}}/{{mgt_msk}}
+!
+no ip routing
+!
+ip route 0.0.0.0/0 {{mgt_gw}}
+!
+ntp local-interface Vlan{{mgt_vlan}}
+ntp server 10.140.221.210 source Vlan{{mgt_vlan}}
+ntp server 10.145.242.16 source Vlan{{mgt_vlan}}
+!
+management api http-commands
+   protocol http
+   no shutdown
+   !
+   vrf default
+      no shutdown
+!

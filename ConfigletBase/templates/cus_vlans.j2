@@ -1,0 +1,16 @@
+! Filename: cus_{{vrf}}_vrf_wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}_{{mgt_ip}}
+!!CusConfig:{{vrf}}_vrf_wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}_{{mgt_ip}}
+!
+vlan {{d_vlan}}
+   name {{vrf}}_VL{{d_vlan}}_DATA
+!
+vlan {{v_vlan}}
+   name {{vrf}}_VL{{v_vlan}}_VOICE
+!
+vlan {{sec_vlan}}
+   name {{vrf}}_VL{{sec_vlan}}_SEC
+
+vlan {{sp_vlan}}
+   name {{vrf}}_VL{{sp_vlan}}_SPEC
+!
+! WE WILL ADD INTEERFACE CONFIGURATIONS BELOW

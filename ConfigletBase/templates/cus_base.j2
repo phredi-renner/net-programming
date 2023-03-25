@@ -1,0 +1,16 @@
+!Filename: cus_base_wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}_{{mgt_ip}}
+!CusConfig:wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}_{{mgt_ip}}
+!
+interface Port-Channel{{pc_num}}
+   description UPLINK_TO_wb-us-bur-b155/157-milf:Po{{pc_num}}
+   switchport mode trunk
+!
+interface Ethernet{{up_int1}}
+   description UPLINK_TO_wb-us-bur-dc155-milf1:E{{lf_int1}}
+   channel-group {{pc_num}} mode active
+   no shutdown
+!
+interface Ethernet{{up_int2}}
+   description UPLINK_TO_wb-us-bur-dc157-milf2:E{{lf_int2}}
+   channel-group {{pc_num}} mode active
+   no shutdown

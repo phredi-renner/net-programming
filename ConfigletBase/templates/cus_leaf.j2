@@ -1,0 +1,19 @@
+! This gets pasted into the leaf switches for the uplinks
+! Beware that there is a CV Builder Configlet if this is being used on
+! a leaf that utilizes ESI port channels... like the MILF switches.
+!
+!CusConfig:wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}_{{mgt_ip}}
+!
+interface Port-Channel{{pc_num}}
+   description DOWNLINK_TO_wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}:Po{{pc_num}}
+   switchport mode trunk
+!
+interface Ethernet{{up_int1}}
+   description DOWNLINK_TO_wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}:E{{up_int1}}
+   channel-group {{pc_num}} mode active
+   no shutdown
+!
+interface Ethernet{{up_int2}}
+   description DOWNLINK_TO_wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}:E{{up_int2}}
+   channel-group {{pc_num}} mode active
+   no shutdown
