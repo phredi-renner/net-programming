@@ -23,7 +23,7 @@ wkbk = 'input/'+work+'.xlsx'
 # Defines the templates
 environment = Environment(loader=FileSystemLoader("templates/"))
 cus_paste_template = environment.get_template("paste_base.j2")
-cus_base_template = environment.get_template("cus_base.j2")
+dyn_base_template = environment.get_template("cus_base.j2")
 cus_vlans_template = environment.get_template("cus_vlans.j2")
 cus_leaf_template = environment.get_template("cus_leaf.j2")
 
@@ -53,7 +53,7 @@ for sheet in wb.sheetnames:
     vrf = page['B21'].value
     # Create some variables we will use based on the info in the spreadsheet
     hostname = 'wb-us-bur-b'+ str(bldg) +'f' + str(floor) + '-as' + str(sw_num)
-    cus_base_outfile = 'cus_base_' + str(hostname) + '_' + str(mgt_ip)
+    dyn_base_outfile = 'dyn_base_' + str(hostname) + '_' + str(mgt_ip)
     cus_paste_outfile = 'cus_PASTE_' + str(hostname) + '_' + str(mgt_ip)
     cus_vlans_outfile = 'cus_' + str(vrf) + '_vrf_' + str(hostname) + '_' + str(mgt_ip)
     cus_LEAF_port_channels = 'cus_LEAF_' + str(hostname) + '_' + str(mgt_ip)
@@ -61,7 +61,7 @@ for sheet in wb.sheetnames:
     # Define the output files and location, these are just text files. I like the .ios
     # extension for color formatting.
     filename1  = cus_paste_outfile + '.ios'
-    filename2  = cus_base_outfile + '.ios'
+    filename2  = dyn_base_outfile + '.ios'
     filename3  = cus_vlans_outfile + '.ios'
     filename4  = cus_LEAF_port_channels + '.ios'
     out_dir = 'output/'
@@ -88,7 +88,7 @@ for sheet in wb.sheetnames:
         vrf=vrf,
         hostname=hostname,
     )
-    f2content = cus_base_template.render(
+    f2content = dyn_base_template.render(
         page=page,
         bldg=bldg,
         floor=floor,
