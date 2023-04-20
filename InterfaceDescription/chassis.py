@@ -1,4 +1,4 @@
-##########################################################
+############################################################################
 # Uses input from spreadsheet to create a textfile to add port
 # description and basic port configuration.
 # This can then be pasted into the appropriate configlet in Cloud Vision
@@ -6,8 +6,9 @@
 #
 # Created by: Fred Renner
 # Date: 3/10/2023
-# Version: 1.0
-##########################################################
+# Version: 1.1
+# - added comments and info to reference proper CV configlet
+############################################################################
 
 import openpyxl
 
@@ -26,12 +27,21 @@ for sheet in wb.sheetnames:
     outputfile = 'output/'+header +'.ios'
     idf = page['D2'].value
     bldg = page['E2'].value
-    d_vlan = page['F2'].value
-    v_vlan = page['G2'].value
-    s_vlan = page['H2'].value
-    sp_vlan = page['I2'].value
+    sw_ip = page['F2'].value
+    d_vlan = page['G2'].value
+    v_vlan = page['H2'].value
+    s_vlan = page['I2'].value
+    sp_vlan = page['J2'].value
+    
     with open(outputfile, 'w') as output:
         # Create a header so we know what we are getting
+#        ! CV Filename: cus_{{vrf}}_vrf_wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}_{{mgt_ip}}
+        output.write('!============================\n')
+        output.write('!CV filename:cus_interface_' + header + '_' + str(sw_ip) + '\n')
+        output.write('!\n')
+        output.write('! Paste everything below in the configlet\n')
+        output.write('!-------\n')
+        output.write('!CusConfig:interface_' + header + '_' + str(sw_ip) + '\n')
         output.write('!============================\n')
         output.write('!' + header + ' - ' + str(sheet) + '\n')
         output.write('!============================\n')
