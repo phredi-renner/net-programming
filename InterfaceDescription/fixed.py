@@ -7,6 +7,7 @@
 # Created by: Fred Renner
 # Date: 3/10/2023
 # Version: 1.0
+# V1.2 - 4/25/23 - adding phone trunk untagged
 ##########################################################
 
 import openpyxl
@@ -66,9 +67,10 @@ for sheet in wb.sheetnames:
                 # Default port configuration
                 output.write(f'interface Ethernet' + str(page.cell(row=i, column=3).value) + '\n')
                 output.write(f' description '+ str(bldg) + '-' + str(idf) + '-' + str(page.cell(row=i, column=1).value) + '\n')
-                output.write(' switchport access vlan ' + str(d_vlan) + '\n')
+            #    output.write(' switchport access vlan ' + str(d_vlan) + '\n')
                 output.write(' switchport trunk native vlan ' + str(d_vlan) + '\n')
                 output.write(' switchport phone vlan ' + str(v_vlan) + '\n')
+                output.write(' switchport phone trunk untagged\n')
                 output.write(' switchport mode trunk phone\n')
                 output.write(' no poe disable\n')
                 output.write(' no shutdown\n')
