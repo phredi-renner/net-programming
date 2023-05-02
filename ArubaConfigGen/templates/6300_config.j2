@@ -1,0 +1,288 @@
+hostname {{hostname}}
+banner motd !
+ ********************************************************************************
+ *                               Warning Notice                                 *
+ *                                                                              *
+ *           Warner Media, LLC.  Information Electronic Network                 *
+ *                                                                              *
+ *  This system is the property of Warner Media, LLC and is intended for        *
+ *  employees and others authorized by Warner Media, LLC in accordance with     *
+ *  its stated policies.                                                        *
+ *                                                                              *
+ *  Unauthorized access or use of this system may subject you to disciplinary   *
+ *  action up to and including termination of employment and to civil and       *
+ *  criminal sanctions.                                                         *
+ *                                                                              *
+ *  This system is monitored.  Use of this system constitutes consent to        *
+ *  such monitoring and users of this system should not expect privacy in such  *
+ *  use.                                                                        *
+ *                                                                              *
+ ********************************************************************************
+ !
+user admin group administrators password ciphertext AQBapfeEJ42rD9TvgTNNwuv/we0IoIxz37qoiye/eWX7HjdIYgAAAO4I6QsVIzd9ANJEwM8rbY+NR8cMrPrtbrMurUsT27deU0PDtIEqtuPvYEgcvPXCjAOqT1jFGoi1c1NpDeIRfilE4ktwDyKniquGv+25806WPD55e/WSmG5FCs5S304dhxAu
+user wbadmin group administrators password ciphertext AQBapfz4MGDtynd6KIdrJOpscO+2bU7hqaG2kzDN0b+rAcY8YgAAAKFbwzKIzuKoAA8E0+e+tu/xNAeSy6x0cgSc6os9Nn6673YLIh6OIh5F6DnKRUc32teBerYnoSbbKSP8iympyARgIB5n7GhMjbSv+8wMfuERniWAniA+1THlcPZ4gbbOYkyW
+aruba-central
+    disable
+ntp server 10.140.221.210
+ntp server 10.145.242.16
+ntp enable
+!
+!
+tacacs-server timeout 3
+!
+!
+tacacs-server host 10.145.12.62 key ciphertext AQBapZAWm8v121W97URqPgqPyvoDi7A+6QNCrft/RMyx/z5KEgAAAE8WmqmTb451XvKgK/PN4liOAA==
+tacacs-server host 10.136.101.215 key ciphertext AQBapZAWm8v121W97URqPgqPyvoDi7A+6QNCrft/RMyx/z5KEgAAAE8WmqmTb451XvKgK/PN4liOAA==
+!
+aaa group server tacacs wbtacacs
+    server 10.145.12.62
+    server 10.136.101.215
+aaa authentication login default group wbtacacs local
+aaa authentication login ssh group wbtacacs local
+aaa authentication login console group wbtacacs local
+aaa authorization commands ssh group wbtacacs local
+!
+ssh server vrf default
+ssh server vrf mgmt
+!
+!
+!
+!
+!
+vlan 1
+vlan {{mgt_vlan}}
+    name mgmt
+vlan {{d_vlan}}
+    name DATA
+vlan {{v_vlan}}
+    name VOICE
+    voice
+vlan {{sec_vlan}}
+    name SECURITY
+vlan {{sp_vlan}}
+    name SPECIALTY
+spanning-tree
+interface mgmt
+    no shutdown
+    ip dhcp
+interface lag {{pc_num}}
+    no shutdown
+    description UPLINK_TO_wb-us-bur-prodnet155/157-milf:Po12
+    no routing
+    vlan trunk native 1
+    vlan trunk allowed {{mgt_vlan}},{{d_vlan}},{{v_vlan}},{{sec_vlan}},{{sp_vlan}}
+    lacp mode active
+    lacp rate fast
+interface 1/1/1 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/2 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/3 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/4 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/5 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/6 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/7 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/8 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/9 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/10 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/11 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/12 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/13 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/14 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/15 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/16 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/17 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/18 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/19 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/20 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/21 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/22 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/23 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/24 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/25 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/26 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/27 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/28 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/29 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/30 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/31 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/32 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/33 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/34 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/35 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/36 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/37 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/38 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/39 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/40 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/41 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/42 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/43 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/44 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/45 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/46 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/47 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/48 
+    shutdown
+    no routing
+    vlan access 1
+interface 1/1/49 
+    no shutdown
+    no routing
+    vlan access 1
+interface 1/1/50 
+    no shutdown
+    no routing
+    vlan access 1
+interface 1/1/51 
+    no shutdown
+    description UPLINK_TO_wb-us-bur-prodnet155-milf1:Et{{lf_int1}}
+    lag {{pc_num}}
+interface 1/1/52 
+    no shutdown
+    description UPLINK_TO_wb-us-bur-prodnet157-milf2:Et{{lf_int2}}
+    lag {{pc_num}}
+interface vlan1 
+    ip dhcp
+interface vlan{{mgt_vlan}}
+    ip address {{mgt_ip}}/{{mgt_msk}}
+ip route 0.0.0.0/0 {{mgt_gw}}
