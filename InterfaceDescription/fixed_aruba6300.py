@@ -7,7 +7,7 @@
 # Created by: Fred Renner
 # Date: 3/10/2023
 # Version: 1.0
-# V1.2 - 4/25/23 - adding phone trunk untagged
+# V1.0 - 5/2/23 - Specific for Aruba 6300
 ##########################################################
 
 import openpyxl
