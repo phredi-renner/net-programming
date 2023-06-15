@@ -1,0 +1,161 @@
+!CusConfig:base_wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}_{{mgt_ip}}
+!
+no aaa root
+!
+username admin role network-admin secret sha512 $6$Sbdxm31ev2sY1q45$B7Os09piyuF9VF/C0QL4a9/wx6JIfimGgcISavcCXuAs84PCRfsGHu9DcuPOyHlrKpmudKyLHWBcqzKe9JybV.
+username wbadmin privilege 15 role network-admin secret sha512 $6$Dsvmep1ClkEd5tth$CI.BHHqTqJxuYCCwj95DdaJQ4A2qarJCAkhmL3RShEE8//yJn5NwxcXtQ7iiE.NuD40LngHVHw/ax4zFcIQzZ/
+!
+terminal length 20
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -ingestgrpcurl=10.145.21.64:9910,10.145.21.65:9910,10.145.21.66:9910 -cvcompression=gzip -ingestauth=token,/tmp/token -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -ingestvrf=default -taillogs
+   no shutdown
+!
+ip dhcp relay information option
+!
+service routing protocols model multi-agent
+!
+lldp management-address Loopback2
+!
+hostname wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}
+!
+snmp-server location {{snmploc}}
+!
+spanning-tree mode mstp
+!
+vlan {{sp_vlan}}
+   name SPECIALTY-SEGMENT
+!
+vlan {{v_vlan}}
+   name Voice_{{v_vlan}}
+!
+vlan {{sec_vlan}}
+   name Security_{{sec_vlan}}
+!
+vlan {{d_vlan}}
+   name Data_{{d_vlan}}
+!
+management api http-commands
+   protocol http
+   no shutdown
+!
+management console
+   idle-timeout 10
+!
+interface Ethernet{{up_int1}}
+   description UPLINK-TO-WB-US-BUR-B750F1-BSP1:{{lf_int1}}
+   no switchport
+   mtu 9214
+   ip address 10.129.3.{{linkaddrid}}/31
+   logging event link-status
+   no spanning-tree portfast
+   no spanning-tree bpduguard
+   no shutdown
+!
+interface Ethernet{{up_int2}}
+   description UPLINK-TO-WB-US-BUR-B750F1-BSP2:{{lf_int2}}
+   no switchport
+   mtu 9214
+   ip address 10.129.4.{{linkaddrid}}/31
+   logging event link-status
+   no spanning-tree portfast
+   no spanning-tree bpduguard
+   no shutdown
+!
+!
+interface Loopback0
+   description RID/EVPN PEERING
+   ip address 10.129.0.{{loopid}}/32
+!
+interface Loopback1
+   description RID/EVPN PEERING
+   ip address 10.129.1.{{loopid}}/32
+!
+interface Loopback2
+   description RID/EVPN PEERING
+   ip address 10.129.2.{{loopid}}/32
+!
+!
+interface Vlan{{sp_vlan}}
+   description SPECIALTY-SEGMENT
+   ip helper-address 10.245.15.10 source-interface Loopback2
+   ip address virtual {{spec_vlan_a}}/{{spec_vlan_m}}
+!
+interface Vlan{{v_vlan}}
+   description Voice
+  vhelper-address 10.245.15.10 source-interface Loopback2
+   ip address virtual {{v_vlan_a}}/{{v_vlan_m}}
+!
+interface Vlan{{sec_vlan}}
+   description Security
+   ip helper-address 10.245.15.10 source-interface Loopback2
+   ip address virtual {{sec_vlan_a}}/{{sec_vlan_m}}
+!
+interface Vlan{{d_vlan}}
+   description Data Network
+   no autostate
+   ip address {{d_vlan_a}}/{{d_vlan_m}}
+   ip helper-address 10.245.15.10 source-interface Loopback2
+!
+interface Vxlan1
+   vxlan source-interface Loopback1
+   vxlan udp-port 4789
+   vxlan vlan {{v_vlan}} vni 20{{v_vlan}}
+   vxlan vlan {{sec_vlan}} vni 20{{sec_vlan}}   
+   vxlan vlan {{sp_vlan}} vni 20{{sp_vlan}}
+!
+ip virtual-router mac-address aa:bb:cc:dd:ee:ff
+!
+ip routing
+!
+ip prefix-list OVERLAY seq 10 permit 10.129.1.64/26 eq 32
+!
+ntp server 10.140.221.210
+ntp server 10.145.242.16
+!
+router bgp {{asn}}
+   bgp asn notation asdot
+   router-id 10.129.0.{{loopid}}
+   distance bgp 20 200 200
+   graceful-restart restart-time 300
+   maximum-paths 2 ecmp 2
+   neighbor EVPN-OVERLAY peer group
+   neighbor EVPN-OVERLAY remote-as 65002
+   neighbor EVPN-OVERLAY update-source Loopback0
+   neighbor EVPN-OVERLAY bfd
+   neighbor EVPN-OVERLAY ebgp-multihop 3
+   neighbor EVPN-OVERLAY send-community
+   neighbor EVPN-OVERLAY maximum-routes 12000
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 65002
+   neighbor SPINE bfd
+   neighbor SPINE graceful-restart
+   neighbor SPINE send-community
+   neighbor SPINE maximum-routes 12000 warning-only
+   neighbor 10.129.0.248 peer group EVPN-OVERLAY
+   neighbor 10.129.0.249 peer group EVPN-OVERLAY
+   neighbor 10.129.3.152 peer group SPINE
+   neighbor 10.129.4.152 peer group SPINE
+   redistribute connected
+   !
+   vlan {{v_vlan}}
+      rd 10.129.0.{{loopid}}:{{v_vlan}}
+      route-target both {{v_vlan}}:{{v_vlan}}
+      redistribute learned
+   vlan {{sec_vlan}}
+      rd 10.129.0.{{loopid}}:{{sec_vlan}}
+      route-target both {{sec_vlan}}:{{sec_vlan}}
+      redistribute learned
+   !
+   vlan {{sp_vlan}}
+      rd 10.129.0.{{loopid}}:{{spec_vlan}}
+      route-target both {{sp_vlan}}:{{sp_vlan}}
+      redistribute learned
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY activate
+!
+management ssh
+   idle-timeout 10
+!
+end

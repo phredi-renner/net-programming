@@ -9,7 +9,8 @@
 #
 # Created by: Fred Renner
 # Date: 3/24/2023
-# Version: 1.0
+# Version: 1.1
+# Added generator for devices in 2c
 ##########################################################
 
 import jinja2
@@ -26,6 +27,7 @@ cus_paste_template = environment.get_template("paste_base.j2")
 dyn_base_template = environment.get_template("cus_base.j2")
 cus_vlans_template = environment.get_template("cus_vlans.j2")
 cus_leaf_template = environment.get_template("cus_leaf.j2")
+cus_b750_template = environment.get_template("b750.j2")
 
 # Open the spreadsheet where we have the data
 wb = openpyxl.load_workbook(wkbk)
@@ -51,12 +53,25 @@ for sheet in wb.sheetnames:
     sec_vlan = page['B18'].value
     sp_vlan = page['B19'].value
     vrf = page['B21'].value
+    asn = page['B22'].value
+    d_vlan_a = page['B23'].value
+    d_vlan_m = page['B24'].value
+    v_vlan_a = page['B25'].value
+    v_vlan_m = page['B26'].value
+    sec_vlan_a = page['B27'].value
+    sec_vlan_m = page['B28'].value
+    spec_vlan_a = page['B29'].value
+    spec_vlan_m = page['B30'].value
+    loopid = page['B35'].value
+    linkaddrid = page['B36'].value
+    snmploc = page['B38'].value
     # Create some variables we will use based on the info in the spreadsheet
     hostname = 'wb-us-bur-b'+ str(bldg) +'f' + str(floor) + '-as' + str(sw_num)
     dyn_base_outfile = 'dyn_base_' + str(hostname) + '_' + str(mgt_ip)
     cus_paste_outfile = 'cus_PASTE_' + str(hostname) + '_' + str(mgt_ip)
     cus_vlans_outfile = 'cus_' + str(vrf) + '_vrf_' + str(hostname) + '_' + str(mgt_ip)
     cus_LEAF_port_channels = 'cus_LEAF_' + str(hostname) + '_' + str(mgt_ip)
+    cus_b750_base = 'cus_base_b750_' + str(hostname) + '_' + str(mgt_ip)
     
     # Define the output files and location, these are just text files. I like the .ios
     # extension for color formatting.
@@ -64,6 +79,7 @@ for sheet in wb.sheetnames:
     filename2  = dyn_base_outfile + '.ios'
     filename3  = cus_vlans_outfile + '.ios'
     filename4  = cus_LEAF_port_channels + '.ios'
+    filename5  = cus_b750_base + '.ios'
     out_dir = 'output/'
 
     # Create the files based on the appropriate templates
@@ -151,6 +167,39 @@ for sheet in wb.sheetnames:
         vrf=vrf,
         hostname=hostname,
     )
+    f5content = cus_b750_template.render(
+        page=page,
+        bldg=bldg,
+        floor=floor,
+        sw_num=sw_num,
+        mgt_vlan=mgt_vlan,
+        mgt_ip=mgt_ip,
+        mgt_msk=mgt_msk,
+        mgt_gw=mgt_gw,
+        pc_num=pc_num,
+        lf_int1=lf_int1,
+        lf_int2=lf_int2,
+        up_int1=up_int1,
+        up_int2=up_int2,
+        d_vlan=d_vlan,
+        v_vlan=v_vlan,
+        sec_vlan=sec_vlan,
+        sp_vlan=sp_vlan,
+        vrf=vrf,
+        hostname=hostname,
+        asn=asn,
+        d_vlan_a=d_vlan_a,
+        d_vlan_m=d_vlan_m,
+        v_vlan_a=v_vlan_a,
+        v_vlan_m=v_vlan_m,
+        sec_vlan_a=sec_vlan_a,
+        sec_vlan_m=sec_vlan_m,
+        spec_vlan_a=spec_vlan_a,
+        spec_vlan_m=spec_vlan_m,
+        loopid=loopid,
+        linkaddrid=linkaddrid,
+        snmploc=snmploc,
+    )
     # Write the files and display the filenames
     with open(out_dir+filename1, mode="w", encoding="utf-8") as message:
         message.write(f1content)
@@ -164,3 +213,6 @@ for sheet in wb.sheetnames:
     with open(out_dir+filename4, mode="w", encoding="utf-8") as message:
         message.write(f4content)
     print(f"... wrote {filename4}")
+    with open(out_dir+filename5, mode="w", encoding="utf-8") as message:
+        message.write(f5content)
+    print(f"... wrote {filename5}")
