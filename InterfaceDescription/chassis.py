@@ -27,7 +27,6 @@ for sheet in wb.sheetnames:
     header = page['A1'].value
     sw_hostname = page['B3'].value
    #outputfile = 'output/'+header +'.ios'
-    outputfile = 'output/'+ sw_hostname +'.ios'
     idf = page['E2'].value
     bldg = page['F2'].value
     sw_ip = page['G2'].value
@@ -35,27 +34,26 @@ for sheet in wb.sheetnames:
     v_vlan = page['I2'].value
     s_vlan = page['J2'].value
     sp_vlan = page['K2'].value
-    
+    outputfile = 'output/cus_interface_'+ str(sw_hostname) +'_' + str(sw_ip) + '.ios'
     with open(outputfile, 'w') as output:
     #    print(f"Page equals: {page}")
         # Create a header so we know what we are getting
-#        ! CV Filename: cus_{{vrf}}_vrf_wb-us-bur-b{{bldg}}f{{floor}}-as{{sw_num}}_{{mgt_ip}}
         output.write('!============================\n')
-        output.write('!CV filename:cus_interface_' + sw_hostname + '_' + str(sw_ip) + '\n')
+        output.write('!CV filename:cus_interface_' + str(sw_hostname) + '_' + str(sw_ip) + '\n')
         output.write('!\n')
         output.write('! Paste everything below in the configlet\n')
         output.write('!-------\n')
-        output.write('!CusConfig:interface_' + sw_hostname + '_' + str(sw_ip) + '\n')
+        output.write('!CusConfig:interface_' + str(sw_hostname) + '_' + str(sw_ip) + '\n')
         output.write('!============================\n')
-        output.write('!' + sw_hostname + '\n')
-        output.write('!' + header + ' - ' + str(sheet) + '\n')
+        output.write('!' + str(sw_hostname) + '\n')
+        output.write('!' + str(header) + ' - ' + str(sheet) + '\n')
         output.write('!============================\n')
         output.write('\n')
         # Look at each row to create the switchport interface config
         # This would be cool if it was based on a jinja template :-)
         for i in range(3, page.max_row+1, 1):
             # If it's a wireless AP we use a different port configuration
-            if 'AP' in page.cell(row=i, column=1).value:
+            if 'AP' in str(page.cell(row=i, column=1).value):
                 output.write(f'interface Ethernet' + str(page.cell(row=i, column=3).value) + '/' + str(page.cell(row=i, column=4).value) + '\n')
                 output.write(f' description '+ str(bldg) + '-' + str(idf) + '-' + str(page.cell(row=i, column=1).value) + '\n')
                 output.write(' switchport access vlan ' + str(d_vlan) + '\n')
@@ -63,14 +61,14 @@ for sheet in wb.sheetnames:
                 output.write(' no shutdown\n')
                 output.write('!\n')
             # if it's a camera then we have a different vlan
-            elif 'CAM' in page.cell(row=i, column=1).value:
+            elif 'CAM' in str(page.cell(row=i, column=1).value):
                 output.write(f'interface Ethernet' + str(page.cell(row=i, column=3).value) + '/' + str(page.cell(row=i, column=4).value) + '\n')
                 output.write(f' description '+ str(bldg) + '-' + str(idf) + '-' + str(page.cell(row=i, column=1).value) + '\n')
                 output.write(' switchport access vlan ' + str(s_vlan) + '\n')
                 output.write(' no poe disable\n')
                 output.write(' no shutdown\n')
                 output.write('!\n')
-            elif 'SP' in page.cell(row=i, column=1).value:
+            elif 'SP' in str(page.cell(row=i, column=1).value):
                 output.write(f'interface Ethernet' + str(page.cell(row=i, column=3).value) + '/' + str(page.cell(row=i, column=4).value) + '\n')
                 output.write(f' description '+ str(bldg) + '-' + str(idf) + '-' + str(page.cell(row=i, column=1).value) + '\n')
                 output.write(' switchport access vlan ' + str(sp_vlan) + '\n')

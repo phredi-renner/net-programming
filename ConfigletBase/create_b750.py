@@ -10,6 +10,7 @@
 # Created by: Fred Renner
 # Date: 3/24/2023
 # Version: 1.1
+# Added generator for devices in 2c
 ##########################################################
 
 import jinja2
@@ -82,90 +83,7 @@ for sheet in wb.sheetnames:
     out_dir = 'output/'
 
     # Create the files based on the appropriate templates
-    f1content = cus_paste_template.render(
-        page=page,
-        bldg=bldg,
-        floor=floor,
-        sw_num=sw_num,
-        mgt_vlan=mgt_vlan,
-        mgt_ip=mgt_ip,
-        mgt_msk=mgt_msk,
-        mgt_gw=mgt_gw,
-        pc_num=pc_num,
-        lf_int1=lf_int1,
-        lf_int2=lf_int2,
-        up_int1=up_int1,
-        up_int2=up_int2,
-        d_vlan=d_vlan,
-        v_vlan=v_vlan,
-        sec_vlan=sec_vlan,
-        sp_vlan=sp_vlan,
-        vrf=vrf,
-        hostname=hostname,
-    )
-    f2content = dyn_base_template.render(
-        page=page,
-        bldg=bldg,
-        floor=floor,
-        sw_num=sw_num,
-        mgt_vlan=mgt_vlan,
-        mgt_ip=mgt_ip,
-        mgt_msk=mgt_msk,
-        mgt_gw=mgt_gw,
-        pc_num=pc_num,
-        lf_int1=lf_int1,
-        lf_int2=lf_int2,
-        up_int1=up_int1,
-        up_int2=up_int2,
-        d_vlan=d_vlan,
-        v_vlan=v_vlan,
-        sec_vlan=sec_vlan,
-        sp_vlan=sp_vlan,
-        vrf=vrf,
-        hostname=hostname,
-    )
-    f3content = cus_vlans_template.render(
-        page=page,
-        bldg=bldg,
-        floor=floor,
-        sw_num=sw_num,
-        mgt_vlan=mgt_vlan,
-        mgt_ip=mgt_ip,
-        mgt_msk=mgt_msk,
-        mgt_gw=mgt_gw,
-        pc_num=pc_num,
-        lf_int1=lf_int1,
-        lf_int2=lf_int2,
-        up_int1=up_int1,
-        up_int2=up_int2,
-        d_vlan=d_vlan,
-        v_vlan=v_vlan,
-        sec_vlan=sec_vlan,
-        sp_vlan=sp_vlan,
-        vrf=vrf,
-        hostname=hostname,
-    )
-    f4content = cus_leaf_template.render(
-        page=page,
-        bldg=bldg,
-        floor=floor,
-        sw_num=sw_num,
-        mgt_vlan=mgt_vlan,
-        mgt_ip=mgt_ip,
-        mgt_msk=mgt_msk,
-        mgt_gw=mgt_gw,
-        pc_num=pc_num,
-        lf_int1=lf_int1,
-        lf_int2=lf_int2,
-        up_int1=up_int1,
-        up_int2=up_int2,
-        d_vlan=d_vlan,
-        v_vlan=v_vlan,
-        sec_vlan=sec_vlan,
-        sp_vlan=sp_vlan,
-        vrf=vrf,
-        hostname=hostname,
-    )
+
     f5content = cus_b750_template.render(
         page=page,
         bldg=bldg,
@@ -200,15 +118,6 @@ for sheet in wb.sheetnames:
         snmploc=snmploc,
     )
     # Write the files and display the filenames
-    with open(out_dir+filename1, mode="w", encoding="utf-8") as message:
-        message.write(f1content)
-    print(f"... wrote {filename1}")
-    with open(out_dir+filename2, mode="w", encoding="utf-8") as message:
-        message.write(f2content)
-    print(f"... wrote {filename2}")
-    with open(out_dir+filename3, mode="w", encoding="utf-8") as message:
-        message.write(f3content)
-    print(f"... wrote {filename3}")
-    with open(out_dir+filename4, mode="w", encoding="utf-8") as message:
-        message.write(f4content)
-    print(f"... wrote {filename4}")
+    with open(out_dir+filename5, mode="w", encoding="utf-8") as message:
+        message.write(f5content)
+    print(f"... wrote {filename5}")
